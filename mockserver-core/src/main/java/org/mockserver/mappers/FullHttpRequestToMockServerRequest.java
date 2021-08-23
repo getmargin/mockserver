@@ -41,7 +41,7 @@ public class FullHttpRequestToMockServerRequest {
 
                 setPath(httpRequest, fullHttpRequest);
                 if (fullHttpRequest.uri().contains("?")) {
-                    setQueryString(httpRequest, new QueryStringDecoder(fullHttpRequest.uri()));
+                    setQueryString(httpRequest, new QueryStringDecoderAllowNull(fullHttpRequest.uri()));
                 }
 
                 setHeaders(httpRequest, fullHttpRequest);
@@ -73,7 +73,7 @@ public class FullHttpRequestToMockServerRequest {
         httpRequest.withPath(URLParser.returnPath(fullHttpRequest.uri()));
     }
 
-    private void setQueryString(HttpRequest httpRequest, QueryStringDecoder queryStringDecoder) {
+    private void setQueryString(HttpRequest httpRequest, QueryStringDecoderAllowNull queryStringDecoder) {
         Parameters parameters = new Parameters();
         try {
             parameters.withEntries(queryStringDecoder.parameters());
