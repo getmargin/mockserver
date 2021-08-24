@@ -4,7 +4,7 @@
 
     <groupId>org.mock-server</groupId>
     <artifactId>mockserver</artifactId>
-    <version>5.10.0-braid</version>
+    <version>5.10.1-braid</version>
     <packaging>pom</packaging>
 
     <name>MockServer</name>
@@ -22,14 +22,15 @@
         </license>
     </licenses>
 
-    <scm>
-        <url>https://github.com/jamesdbloom/mockservice.git</url>
-        <connection>scm:git:https://github.com/jamesdbloom/mockservice.git</connection>
-        <developerConnection>scm:git:git@github.com:jamesdbloom/mockservice.git</developerConnection>
-      <tag>mockserver-5.10.0</tag>
-  </scm>
+<!--    <scm>-->
+<!--        <url>https://github.com/jamesdbloom/mockservice.git</url>-->
+<!--        <connection>scm:git:https://github.com/jamesdbloom/mockservice.git</connection>-->
+<!--        <developerConnection>scm:git:git@github.com:jamesdbloom/mockservice.git</developerConnection>-->
+<!--      <tag>mockserver-5.10.0</tag>-->
+<!--  </scm>-->
 
     <distributionManagement>
+        <!--
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
@@ -37,6 +38,12 @@
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+        -->
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/getmargin/mockserver</url>
         </repository>
     </distributionManagement>
 
