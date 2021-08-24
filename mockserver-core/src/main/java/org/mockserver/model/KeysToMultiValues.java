@@ -16,6 +16,8 @@ import static org.mockserver.model.NottableString.*;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public abstract class KeysToMultiValues<T extends KeyToMultiValue, K extends KeysToMultiValues> extends ObjectWithJsonToString {
 
+    public static final String NULL_QUERY_PARAM_VALUE = "NULL_QUERY_PARAM_VALUE";
+
     private final Multimap<NottableString, NottableString> listMultimap = LinkedHashMultimap.create();
     private final K k = (K) this;
 
@@ -63,16 +65,22 @@ public abstract class KeysToMultiValues<T extends KeyToMultiValue, K extends Key
 
     public K withEntry(final T entry) {
         if (entry.getValues().isEmpty()) {
-            listMultimap.put(entry.getName(), null);
+            listMultimap.put(entry.getName(), NottableString.string(NULL_QUERY_PARAM_VALUE));
         } else {
-            listMultimap.putAll(entry.getName(), entry.getValues());
+            for(NottableString value : entry.getValues()) {
+                if (value == null) {
+                    listMultimap.put(entry.getName(), NottableString.string(NULL_QUERY_PARAM_VALUE));
+                } else {
+                    listMultimap.put(entry.getName(), value);
+                }
+            }
         }
         return k;
     }
 
     public K withEntry(final String name, final String... values) {
-        if (values == null || values.length == 0) {
-            listMultimap.put(string(name), null);
+        if (values == null || values.length == 0 || Arrays.stream(values).allMatch(Objects::isNull)) {
+            listMultimap.put(string(name), NottableString.string(NULL_QUERY_PARAM_VALUE));
         } else {
             listMultimap.putAll(string(name), deserializeNottableStrings(values));
         }
@@ -80,8 +88,8 @@ public abstract class KeysToMultiValues<T extends KeyToMultiValue, K extends Key
     }
 
     public K withEntry(final String name, final List<String> values) {
-        if (values == null || values.size() == 0) {
-            listMultimap.put(string(name), null);
+        if (values == null || values.size() == 0 || values.stream().allMatch(Objects::isNull)) {
+            listMultimap.put(string(name), NottableString.string(NULL_QUERY_PARAM_VALUE));
         } else {
             listMultimap.putAll(string(name), deserializeNottableStrings(values));
         }

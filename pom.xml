@@ -4,7 +4,7 @@
 
     <groupId>org.mock-server</groupId>
     <artifactId>mockserver</artifactId>
-    <version>5.10.1a-braid</version>
+    <version>5.10.1n-braid</version>
     <packaging>pom</packaging>
 
     <name>MockServer</name>

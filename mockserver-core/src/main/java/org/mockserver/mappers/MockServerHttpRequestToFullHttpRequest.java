@@ -5,10 +5,8 @@ import io.netty.handler.codec.http.*;
 import org.mockserver.codec.BodyDecoderEncoder;
 import org.mockserver.log.model.LogEntry;
 import org.mockserver.logging.MockServerLogger;
-import org.mockserver.model.Header;
+import org.mockserver.model.*;
 import org.mockserver.model.HttpRequest;
-import org.mockserver.model.NottableString;
-import org.mockserver.model.Parameter;
 import org.slf4j.event.Level;
 
 import java.util.ArrayList;
@@ -65,7 +63,11 @@ public class MockServerHttpRequestToFullHttpRequest {
             QueryStringEncoder queryStringEncoder = new QueryStringEncoder(httpRequest.getPath().getValue());
             for (Parameter parameter : httpRequest.getQueryStringParameterList()) {
                 for (NottableString value : parameter.getValues()) {
-                    queryStringEncoder.addParam(parameter.getName().getValue(), value.getValue());
+                    if (value.getValue().equals(KeysToMultiValues.NULL_QUERY_PARAM_VALUE)) {
+                        queryStringEncoder.addParam(parameter.getName().getValue(), null);
+                    } else {
+                        queryStringEncoder.addParam(parameter.getName().getValue(), value.getValue());
+                    }
                 }
             }
             return queryStringEncoder.toString();
