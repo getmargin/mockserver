@@ -17,6 +17,7 @@ import java.util.Set;
 import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_TYPE;
 import static io.netty.handler.codec.http.HttpHeaderNames.COOKIE;
 import static io.netty.handler.codec.http.HttpUtil.isKeepAlive;
+import static org.mockserver.model.KeysToMultiValues.NULL_QUERY_PARAM_VALUE;
 
 /**
  * @author jamesdbloom
@@ -76,7 +77,11 @@ public class FullHttpRequestToMockServerRequest {
     private void setQueryString(HttpRequest httpRequest, QueryStringDecoderAllowNull queryStringDecoder) {
         Parameters parameters = new Parameters();
         try {
-            parameters.withEntries(queryStringDecoder.parameters());
+            if (queryStringDecoder.parameters().size() == 1 && queryStringDecoder.parameters().values().stream().findFirst().get().size() == 1 && queryStringDecoder.parameters().values().stream().findFirst().get().equals(NULL_QUERY_PARAM_VALUE)) {
+                parameters.withEntry(queryStringDecoder.rawQuery(), NULL_QUERY_PARAM_VALUE); // do not decode
+            } else {
+                parameters.withEntries(queryStringDecoder.parameters());
+            }
         } catch (IllegalArgumentException iae) {
             mockServerLogger.logEvent(
                 new LogEntry()

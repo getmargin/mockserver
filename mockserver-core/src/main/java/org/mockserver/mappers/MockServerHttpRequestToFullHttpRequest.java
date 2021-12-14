@@ -64,6 +64,10 @@ public class MockServerHttpRequestToFullHttpRequest {
             for (Parameter parameter : httpRequest.getQueryStringParameterList()) {
                 for (NottableString value : parameter.getValues()) {
                     if (value.getValue().equals(KeysToMultiValues.NULL_QUERY_PARAM_VALUE)) {
+                        if (httpRequest.getQueryStringParameterList().size() == 1 && parameter.getValues().size() == 1) {
+                            // Do not encode.
+                            return httpRequest.getPath().getValue() + "?" + parameter.getName().getValue();
+                        }
                         queryStringEncoder.addParam(parameter.getName().getValue(), null);
                     } else {
                         queryStringEncoder.addParam(parameter.getName().getValue(), value.getValue());
